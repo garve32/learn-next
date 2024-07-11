@@ -1,17 +1,26 @@
 import Image from 'next/image';
 import styles from './CartList.module.css';
 import { removeCartItem } from '@/api';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 export default function CartList({ carts }) {
+	const router = useRouter();
+
 	const totalPrice = carts.reduce((acc, cur) => {
 		return acc + parseFloat(cur.price);
 	}, 0);
 
 	const removeCart = async id => {
 		// 1. 삭제 API호출
-		await removeCartItem(id);
-		alert('삭제 완료');
+		// const { data } = await removeCartItem(id);
+		const { data } = await axios.post('http://localhost:3000/api/carts', {
+			id: id,
+		});
+		alert(data);
+		// alert(`${data.name} 삭제 완료`);
 		// 2. 카트 목록 갱신
+		router.replace(router.asPath);
 	};
 
 	return (
